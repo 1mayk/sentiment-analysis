@@ -3,6 +3,7 @@ import string
 import re
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+from sentiment_dict_pt import analyze_sentiment
 
 # Downloads necessários (executar na primeira vez)
 nltk.download("punkt")
@@ -15,9 +16,10 @@ def preprocess_text(text):
       - Converte para minúsculas
       - Remove URLs
       - Remove pontuação
-      - Tokeniza o texto (opcional para análises mais robustas)
-      - (Opcional) Remove stopwords
-    Retorna o texto processado.
+      - Tokeniza o texto
+      - Remove stopwords
+    Em seguida, analisa o sentimento usando o dicionário em sentiment_dict_pt.
+    Retorna tupla: (processed_text, score, sentiment_label).
     """
     # Converte para minúsculas
     text = text.lower()
@@ -28,11 +30,17 @@ def preprocess_text(text):
     # Remove pontuações
     text = text.translate(str.maketrans("", "", string.punctuation))
 
-    # Tokenização
-    tokens = word_tokenize(text)
+    # Tokenização em português
+    tokens = word_tokenize(text, language="portuguese")
 
     # Remove stopwords
-    stop_words = set(stopwords.words('portuguese'))
+    stop_words = set(stopwords.words("portuguese"))
     tokens = [word for word in tokens if word not in stop_words]
 
-    return " ".join(tokens)
+    # Junta de volta em string
+    processed = " ".join(tokens)
+
+    # Chama o seu analisador de sentimento
+    score, sentiment = analyze_sentiment(processed)
+
+    return processed, score, sentiment

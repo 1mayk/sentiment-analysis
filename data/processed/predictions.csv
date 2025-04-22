@@ -1,0 +1,11 @@
+texto,texto_limpo,pontuacao,sentimento_previsto
+"Adorei o atendimento, muito atencioso e profissional.",adorei atendimento atencioso profissional,2,positivo
+"O atendimento foi péssimo, estou frustrado com o serviço.",atendimento péssimo frustrado serviço,-2,negativo
+"Produto excelente, mas o frete demorou demais.",produto excelente frete demorou demais,2,positivo
+"Fiquei indiferente, nada de especial na experiência.",fiquei indiferente nada especial experiência,0,neutro
+"Com certeza recomendarei para meus amigos, ótima experiência!",certeza recomendarei amigos ótima experiência,0,neutro
+"Demorou muito para resolver meu problema, fiquei insatisfeito.",demorou resolver problema fiquei insatisfeito,-2,negativo
+"Estou surpreso com a agilidade do suporte, parabéns!",surpreso agilidade suporte parabéns,0,neutro
+"Não gostei do produto, veio com defeito.",gostei produto veio defeito,0,neutro
+O atendimento me surpreendeu positivamente.,atendimento surpreendeu positivamente,0,neutro
+"A experiência foi mediana, poderia melhorar.",experiência mediana poderia melhorar,0,neutro

@@ -51,6 +51,7 @@ Recomenda-se criar um ambiente virtual para gerenciar as dependências do projet
    ```
 
 3. **Como saber se o ambiente está ativo?**
+
 - Ao ativar, o nome do ambiente aparecerá no início da sua linha de comando, por exemplo:
 
          (.venv) user@maquina:~/seu-projeto$
@@ -72,7 +73,6 @@ Recomenda-se criar um ambiente virtual para gerenciar as dependências do projet
    deactivate
    ```
 
-
 ## Instalação
 
 1. Clone o repositório:
@@ -90,24 +90,24 @@ Recomenda-se criar um ambiente virtual para gerenciar as dependências do projet
 
 ## Utilização
 
-1. **Analisando uma Única Mensagem**
+1.  **Analisando uma Única Mensagem**
 
-   Você pode analisar rapidamente uma mensagem usando o script `predict.py`:
+    Você pode analisar rapidamente uma mensagem usando o script `predict.py`:
 
-   - **Modo Interativo:**  
-     Basta executar o script sem argumentos e digitar a mensagem quando solicitado.
-     
-         python src/predict.py
+    - **Modo Interativo:**  
+      Basta executar o script sem argumentos e digitar a mensagem quando solicitado.
 
-   - **Via Linha de Comando:**  
-     Forneça a mensagem diretamente:
-     
-         python src/predict.py --message "Eu amo a Labware!"
+          python src/predict.py
 
-2. **Analisando Mensagens em Batch (Arquivo CSV)**
+    - **Via Linha de Comando:**  
+      Forneça a mensagem diretamente:
 
-   Para processar várias mensagens contidas em um arquivo CSV, utilize o argumento `--csv`:
+          python src/predict.py --message "Eu amo a Labware!"
 
-         python src/predict.py --csv ../data/raw/client_conversations.csv --out ../data/processed/predictions.csv
+2.  **Analisando Mensagens em Batch (Arquivo CSV)**
 
-   As predições serão salvas no arquivo especificado (por padrão, `../data/processed/predictions.csv`).
+    Para processar várias mensagens contidas em um arquivo CSV, utilize o argumento `--csv`:
+
+          python src/predict.py --csv data/raw/client_conversations.csv --out data/processed/predictions.csv
+
+    As predições serão salvas no arquivo especificado (por padrão, `../data/processed/predictions.csv`).

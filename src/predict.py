@@ -1,48 +1,69 @@
+#!/usr/bin/env python3
 import argparse
 import pandas as pd
 import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from src.preprocess import preprocess_text
+from preprocess import preprocess_text
+from sentiment_dict_pt import analyze_sentiment
 
-# Download do léxico VADER
-nltk.download("vader_lexicon")
+# Downloads necessários (executar na primeira vez)
+nltk.download("punkt")
+nltk.download("stopwords")
 
 
-def analyze_message_vader(message):
+def analyze_message_pt(message):
     """
-    Analisa a mensagem usando o SentimentIntensityAnalyzer (VADER).
-    Retorna 'positivo', 'negativo' ou 'neutro' com base na pontuação compound.
+    Analisa a mensagem usando o dicionário de português em sentiment_dict_pt.
+    Retorna 'positivo', 'negativo' ou 'neutro'.
     """
-    sia = SentimentIntensityAnalyzer()
-    scores = sia.polarity_scores(message)
-    compound = scores["compound"]
-
-    # Define os limites para classificar a mensagem
-    if compound >= 0.05:
-        return "positivo"
-    elif compound <= -0.05:
-        return "negativo"
+    processed = preprocess_text(message)
+    # Se preprocess_text retornar tupla, pega só o texto processado
+    if isinstance(processed, tuple):
+        processed_text = processed[0]
     else:
-        return "neutro"
+        processed_text = processed
+
+    score, sentiment = analyze_sentiment(processed_text)
+    return sentiment
 
 
 def predict_single_message(message):
-    # Pré-processa a mensagem
-    message_clean = preprocess_text(message)
-    sentiment = analyze_message_vader(message_clean)
+    """
+    Analisa uma única mensagem e imprime o resultado.
+    """
+    processed = preprocess_text(message)
+    if isinstance(processed, tuple):
+        processed_text = processed[0]
+    else:
+        processed_text = processed
+
+    score, sentiment = analyze_sentiment(processed_text)
     print("Mensagem:", message)
+    # print("Texto processado:", processed_text)
+    # print("Pontuação:", score)
     print("Sentimento Previsto:", sentiment)
 
 
 def predict_from_csv(input_file, output_file):
-    # Lê os dados do CSV; espera que exista uma coluna "texto"
+    """
+    Lê um CSV com coluna "texto", aplica preprocessamento e análise
+    de sentimento, e salva um novo CSV com as colunas:
+      - texto_limpo
+      - pontuacao
+      - sentimento_previsto
+    """
+    # Lê os dados do CSV
     data = pd.read_csv(input_file)
 
-    # Pré-processar os textos
-    data["texto_limpo"] = data["texto"].apply(preprocess_text)
+    # Aplica preprocess_text e extrai string limpa
+    processed_series = data["texto"].apply(preprocess_text)
+    data["texto_limpo"] = processed_series.apply(
+        lambda x: x[0] if isinstance(x, tuple) else x
+    )
 
-    # Aplica o VADER para cada mensagem
-    data["sentimento_previsto"] = data["texto_limpo"].apply(analyze_message_vader)
+    # Analisa sentimento em cada texto limpo
+    results = data["texto_limpo"].apply(lambda txt: analyze_sentiment(txt))
+    data["pontuacao"] = results.apply(lambda tup: tup[0])
+    data["sentimento_previsto"] = results.apply(lambda tup: tup[1])
 
     # Salva os resultados no arquivo CSV de saída
     data.to_csv(output_file, index=False)
@@ -50,33 +71,30 @@ def predict_from_csv(input_file, output_file):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Análise de Sentimento com VADER")
-
-    # Parâmetro para analisar uma mensagem
-    parser.add_argument("-m", "--message", type=str, help="Mensagem para análise")
-
-    # Parâmetros para análise em CSV
+    parser = argparse.ArgumentParser(
+        description="Análise de Sentimento com dicionário PT"
+    )
+    parser.add_argument(
+        "-m", "--message", type=str, help="Mensagem única para análise de sentimento"
+    )
     parser.add_argument(
         "--csv",
         type=str,
-        help='Caminho para o arquivo CSV com as mensagens (deve conter a coluna "texto")',
+        help='Caminho para o arquivo CSV com as mensagens (coluna "texto")',
     )
     parser.add_argument(
         "--out",
         type=str,
         default="../data/processed/predictions.csv",
-        help="Arquivo de saída para predições",
+        help="Arquivo de saída para predições (quando usar --csv)",
     )
 
     args = parser.parse_args()
 
-    # Se o argumento CSV for fornecido, processa o arquivo
     if args.csv:
         predict_from_csv(args.csv, args.out)
-    # Se uma mensagem individual for fornecida, processa a mensagem
     elif args.message:
         predict_single_message(args.message)
-    # Caso nenhum argumento seja fornecido, solicita a mensagem interativamente
     else:
         user_input = input("Digite a mensagem para análise de sentimento: ")
         predict_single_message(user_input)
