@@ -34,23 +34,33 @@ Recomenda-se criar um ambiente virtual para gerenciar as dependências do projet
 
    ```bash
    # No Linux/MacOS:
-   python3 -m venv venv
+   python3 -m venv .venv
 
    # No Windows:
-   python -m venv venv
+   python -m venv .venv
    ```
 
 2. **Ative o ambiente virtual:**
 
    ```bash
    # No Linux/MacOS:
-   source venv/bin/activate
+   source .venv/bin/activate
 
    # No Windows:
-   venv\Scripts\activate
+   .venv\Scripts\activate
    ```
 
-3. **Instale as dependências com o ambiente ativado:**
+3. **Como saber se o ambiente está ativo?**
+- Ao ativar, o nome do ambiente aparecerá no início da sua linha de comando, por exemplo:
+
+         (.venv) user@maquina:~/seu-projeto$
+
+- Para verificar com um comando, você pode rodar:
+
+         which python      # Linux/MacOS
+         where python      # Windows
+
+4. **Instale as dependências com o ambiente ativado:**
 
    ```bash
    pip install -r requirements.txt
