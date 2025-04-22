@@ -66,6 +66,13 @@ Recomenda-se criar um ambiente virtual para gerenciar as dependências do projet
    pip install -r requirements.txt
    ```
 
+5. **Para desativar o ambiente virtual no fim do processo:**
+
+   ```bash
+   deactivate
+   ```
+
+
 ## Instalação
 
 1. Clone o repositório:
